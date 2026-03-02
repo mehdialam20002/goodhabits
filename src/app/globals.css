@@ -1,0 +1,187 @@
+@import "tailwindcss";
+
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-sans: var(--font-inter);
+  --font-outfit: var(--font-outfit);
+
+  --radius-lg: 1.5rem;
+  --radius-md: 1rem;
+  --radius-sm: 0.75rem;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+}
+
+@layer base {
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 210 20% 5%;
+    --card: 0 0% 100%;
+    --card-foreground: 210 20% 5%;
+    --primary: 185 100% 50%;
+    /* Electric Cyan */
+    --primary-foreground: 185 100% 5%;
+    --secondary: 210 20% 92%;
+    --secondary-foreground: 185 100% 30%;
+    --accent: 75 100% 50%;
+    /* Vivid Lime Glow */
+    --accent-foreground: 210 20% 5%;
+    --border: 210 20% 90%;
+    --ring: 185 100% 50%;
+    --radius: 1.5rem;
+  }
+
+  .dark {
+    --background: 220 20% 4%;
+    /* Deep Charcoal */
+    --foreground: 210 10% 98%;
+    --card: 220 20% 6%;
+    --card-foreground: 210 10% 98%;
+    --primary: 185 100% 50%;
+    /* Electric Cyan Neon */
+    --primary-foreground: 220 20% 4%;
+    --secondary: 220 15% 12%;
+    --secondary-foreground: 185 80% 90%;
+    --accent: 75 100% 60%;
+    /* Lime Neon */
+    --accent-foreground: 220 20% 4%;
+    --border: 220 15% 12%;
+    --ring: 185 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
+  }
+}
+
+@layer utilities {
+  .glass-effect {
+    @apply bg-white/60 dark:bg-zinc-900/40 backdrop-blur-3xl border border-white/40 dark:border-zinc-800/20;
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05);
+  }
+
+  .soft-shadow {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.03), 0 10px 20px -5px rgba(0, 0, 0, 0.01);
+  }
+
+  .aura-gradient {
+    background: radial-gradient(circle at 0% 0%, hsla(255, 70%, 55%, 0.1), transparent 40%),
+      radial-gradient(circle at 100% 100%, hsla(160, 80%, 45%, 0.05), transparent 40%);
+  }
+
+  .text-aura {
+    @apply bg-clip-text text-transparent bg-linear-to-br from-indigo-600 via-violet-500 to-emerald-500 dark:from-indigo-400 dark:via-violet-300 dark:to-emerald-300;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-aura-pulse {
+    animation: aura-pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .stagger-1 {
+    animation-delay: 100ms;
+  }
+
+  .stagger-2 {
+    animation-delay: 200ms;
+  }
+
+  .stagger-3 {
+    animation-delay: 300ms;
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes aura-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+}
+
+/* Page Entry Animations */
+@keyframes aura-reveal {
+  from {
+    opacity: 0;
+    transform: scale(0.98) translateY(20px);
+    filter: blur(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+.animate-aura-reveal {
+  animation: aura-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes splash-name {
+  0% {
+    transform: tracking-tight;
+    opacity: 0;
+    filter: blur(20px);
+  }
+
+  50% {
+    opacity: 1;
+    filter: blur(0);
+  }
+
+  100% {
+    letter-spacing: 0.1em;
+  }
+}
+
+.animate-splash-name {
+  animation: splash-name 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
