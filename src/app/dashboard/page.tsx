@@ -4,6 +4,7 @@ import HabitList from "@/components/HabitList";
 import { format } from "date-fns";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { Sparkles } from "lucide-react";
 
 export default async function DashboardPage({
     searchParams,
@@ -35,20 +36,27 @@ export default async function DashboardPage({
     const progressPercent = total === 0 ? 0 : Math.round((completed / total) * 100);
 
     return (
-        <div className="max-w-5xl mx-auto w-full animate-aura-reveal opacity-0" style={{ animationFillMode: 'forwards' }}>
-            <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8 stagger-1">
-                <div className="space-y-1">
-                    <h1 className="text-5xl font-black tracking-tighter text-aura mb-2">Hello, Aura</h1>
-                    <p className="text-zinc-500 font-medium tracking-tight">Your mindful journey continues today.</p>
+        <div className="max-w-6xl mx-auto w-full animate-aura-reveal relative min-h-screen pb-20">
+            {/* Ambient Background Glows */}
+            <div className="absolute top-0 -left-20 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-40 -right-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
+
+            <header className="mb-14 flex flex-col md:flex-row md:items-end justify-between gap-10 relative z-10">
+                <div className="space-y-2">
+                    <div className="flex items-center gap-3 mb-2">
+                        <span className="px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-[10px] font-black uppercase tracking-widest border border-indigo-200/50 dark:border-indigo-800/50 shadow-sm">Protocol Active</span>
+                    </div>
+                    <h1 className="text-5xl font-black tracking-tighter text-zinc-900 dark:text-zinc-50 italic">Aura Orbit</h1>
+                    <p className="text-sm font-medium text-zinc-400 max-w-md">Your structural intelligence, synchronized in real-time.</p>
                 </div>
 
-                <div className="flex flex-col items-end gap-2">
-                    <span className="text-sm text-zinc-500 font-medium">Daily Progress</span>
+                <div className="flex flex-col md:items-end gap-3 p-6 rounded-[2.5rem] bg-white dark:bg-zinc-900/50 border border-indigo-50 dark:border-zinc-800/50 shadow-xl shadow-indigo-100/20 dark:shadow-none">
+                    <span className="text-[10px] text-indigo-500 font-black uppercase tracking-[0.2em]">Efficiency Index</span>
                     <div className="flex items-center gap-4">
-                        <span className="text-3xl font-black italic">{progressPercent}%</span>
-                        <div className="w-40 h-3 bg-zinc-100 dark:bg-zinc-900 rounded-full overflow-hidden shadow-inner border border-zinc-200/50 dark:border-zinc-800/50">
+                        <span className="text-3xl font-black text-indigo-600 dark:text-cyan-400">{progressPercent}%</span>
+                        <div className="w-40 h-3 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden border border-zinc-200/50 dark:border-zinc-700/50">
                             <div
-                                className="h-full bg-linear-to-r from-indigo-600 via-violet-500 to-emerald-400 transition-all duration-1000 ease-[cubic-bezier(0.34,1.56,0.64,1)] rounded-full shadow-[0_0_10px_rgba(79,70,229,0.3)]"
+                                className="h-full aura-glow transition-all duration-1000 ease-out rounded-full shadow-[0_0_15px_rgba(99,102,241,0.5)]"
                                 style={{ width: `${progressPercent}%` }}
                             />
                         </div>
@@ -56,8 +64,12 @@ export default async function DashboardPage({
                 </div>
             </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 stagger-2">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 relative z-10">
+                <div className="lg:col-span-2">
+                    <div className="mb-4 flex items-center justify-between px-2">
+                        <h2 className="text-lg font-black tracking-tight text-zinc-800 dark:text-zinc-200">Daily Directive</h2>
+                        <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">{format(new Date(dateStr), "EEEE, d MMMM")}</span>
+                    </div>
                     {/* The main interactive habit list component */}
                     <HabitList
                         habits={habits}
@@ -67,21 +79,32 @@ export default async function DashboardPage({
                     />
                 </div>
 
-                <div className="space-y-6">
-                    <div className="p-8 rounded-[2.5rem] glass-effect border-2 border-indigo-50 dark:border-indigo-900/20 soft-shadow premium-gradient aura-gradient stagger-3">
-                        <h3 className="font-black text-xs uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400 mb-6 flex items-center gap-3">
-                            <span className="flex h-2.5 w-2.5 rounded-full bg-indigo-600 animate-aura-pulse" />
-                            Aura Coaching
+                <div className="space-y-8">
+                    <div className="p-8 rounded-[3rem] glass-card border-indigo-50/50 dark:border-zinc-800/50 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 aura-glow opacity-10 rounded-full blur-2xl transition-all group-hover:opacity-20" />
+
+                        <h3 className="font-black text-[11px] uppercase tracking-[0.3em] text-indigo-600 dark:text-cyan-400 mb-6 flex items-center gap-3">
+                            <Sparkles className="w-4 h-4 animate-aura-pulse" />
+                            AI Synthesis
                         </h3>
-                        <p className="text-lg font-bold text-zinc-900 dark:text-zinc-50 leading-relaxed italic border-l-4 border-indigo-500 pl-4 py-2">
+                        <p className="text-lg font-bold text-zinc-800 dark:text-zinc-200 leading-relaxed italic border-l-4 border-indigo-600 dark:border-cyan-400 pl-6 py-2">
                             "{aiAnalysis}"
                         </p>
-                        <div className="mt-8 pt-6 border-t border-zinc-200/50 dark:border-zinc-800/50 flex items-center justify-between">
-                            <p className="text-[10px] uppercase tracking-widest font-black text-zinc-400">Gemini 2.0 Oracle</p>
-                            <div className="flex -space-x-2">
-                                <div className="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-950 border-2 border-white dark:border-zinc-900" />
-                                <div className="w-6 h-6 rounded-full bg-violet-100 dark:bg-violet-950 border-2 border-white dark:border-zinc-900" />
-                            </div>
+                        <div className="mt-8 pt-6 border-t border-indigo-50/50 dark:border-zinc-800/50">
+                            <p className="text-[9px] uppercase tracking-[0.3em] font-black text-zinc-400">Processing via Gemini-Aura Engine</p>
+                        </div>
+                    </div>
+
+                    <div className="p-8 rounded-[3rem] bg-linear-to-br from-zinc-900 to-zinc-950 text-white shadow-2xl relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 w-48 h-48 aura-glow opacity-30 rounded-full blur-3xl pointer-events-none" />
+                        <h4 className="text-xs font-black uppercase tracking-widest text-indigo-400 mb-2">Weekly Goal</h4>
+                        <p className="text-xl font-bold leading-tight mb-6">Maintain 85% average across all habits.</p>
+                        <div className="flex -space-x-2">
+                            {[1, 2, 3, 4, 5].map(i => (
+                                <div key={i} className="w-8 h-8 rounded-full border-2 border-zinc-900 bg-zinc-800 flex items-center justify-center text-[10px] font-bold">
+                                    {i}
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>

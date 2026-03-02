@@ -33,39 +33,37 @@
 
 @layer base {
   :root {
-    --background: 210 20% 98%;
-    --foreground: 210 20% 5%;
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
-    --card-foreground: 210 20% 5%;
-    --primary: 185 100% 50%;
+    --card-foreground: 240 10% 3.9%;
+    --primary: 180 100% 45%;
     /* Electric Cyan */
-    --primary-foreground: 185 100% 5%;
-    --secondary: 210 20% 92%;
-    --secondary-foreground: 185 100% 30%;
-    --accent: 75 100% 50%;
-    /* Vivid Lime Glow */
-    --accent-foreground: 210 20% 5%;
-    --border: 210 20% 90%;
-    --ring: 185 100% 50%;
-    --radius: 1.5rem;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --accent: 262 80% 60%;
+    /* Vibrant Violet */
+    --accent-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --ring: 180 100% 45%;
+    --radius: 1rem;
   }
 
   .dark {
-    --background: 220 20% 4%;
-    /* Deep Charcoal */
-    --foreground: 210 10% 98%;
-    --card: 220 20% 6%;
-    --card-foreground: 210 10% 98%;
-    --primary: 185 100% 50%;
-    /* Electric Cyan Neon */
-    --primary-foreground: 220 20% 4%;
-    --secondary: 220 15% 12%;
-    --secondary-foreground: 185 80% 90%;
-    --accent: 75 100% 60%;
-    /* Lime Neon */
-    --accent-foreground: 220 20% 4%;
-    --border: 220 15% 12%;
-    --ring: 185 100% 50%;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --primary: 180 100% 50%;
+    /* Brighter Electric Cyan */
+    --primary-foreground: 240 10% 3.9%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 262 80% 70%;
+    --accent-foreground: 240 10% 3.9%;
+    --border: 240 3.7% 15.9%;
+    --ring: 180 100% 50%;
   }
 }
 
@@ -75,49 +73,65 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary;
+    @apply bg-background text-foreground antialiased selection:bg-accent/10 selection:text-accent;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
   }
 }
 
 @layer utilities {
-  .glass-effect {
-    @apply bg-white/60 dark:bg-zinc-900/40 backdrop-blur-3xl border border-white/40 dark:border-zinc-800/20;
-    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05);
-  }
-
-  .soft-shadow {
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.03), 0 10px 20px -5px rgba(0, 0, 0, 0.01);
-  }
-
-  .aura-gradient {
-    background: radial-gradient(circle at 0% 0%, hsla(255, 70%, 55%, 0.1), transparent 40%),
-      radial-gradient(circle at 100% 100%, hsla(160, 80%, 45%, 0.05), transparent 40%);
-  }
-
   .text-aura {
-    @apply bg-clip-text text-transparent bg-linear-to-br from-indigo-600 via-violet-500 to-emerald-500 dark:from-indigo-400 dark:via-violet-300 dark:to-emerald-300;
+    @apply text-indigo-600 dark:text-cyan-400 font-black;
   }
 
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
+  .glass-effect {
+    @apply bg-white/40 dark:bg-zinc-950/40 backdrop-blur-xl border border-zinc-200/50 dark:border-zinc-800/50;
+  }
+
+  .glass-card {
+    @apply bg-white/70 dark:bg-zinc-900/70 backdrop-blur-2xl border border-white/20 shadow-xl;
+  }
+
+  .aura-glow {
+    @apply bg-linear-to-r from-indigo-500 via-purple-500 to-cyan-500;
+  }
+
+  .text-gradient {
+    @apply bg-linear-to-r from-indigo-600 via-purple-600 to-cyan-500 bg-clip-text text-transparent;
   }
 
   .animate-aura-pulse {
-    animation: aura-pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    animation: aura-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+@keyframes aura-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 
-  .stagger-1 {
-    animation-delay: 100ms;
+  50% {
+    opacity: .5;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes aura-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
   }
 
-  .stagger-2 {
-    animation-delay: 200ms;
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
+}
 
-  .stagger-3 {
-    animation-delay: 300ms;
-  }
+.animate-aura-reveal {
+  animation: aura-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes float {
@@ -132,56 +146,47 @@
   }
 }
 
-@keyframes aura-pulse {
+@keyframes pulse-slow {
 
   0%,
   100% {
-    opacity: 1;
+    opacity: 0.3;
     transform: scale(1);
   }
 
   50% {
-    opacity: 0.8;
-    transform: scale(1.02);
+    opacity: 0.6;
+    transform: scale(1.1);
   }
 }
 
-/* Page Entry Animations */
-@keyframes aura-reveal {
+/* Crisp Entry Animations */
+@keyframes zen-reveal {
   from {
     opacity: 0;
-    transform: scale(0.98) translateY(20px);
-    filter: blur(10px);
+    transform: translateY(20px);
   }
 
   to {
     opacity: 1;
-    transform: scale(1) translateY(0);
-    filter: blur(0);
+    transform: translateY(0);
   }
 }
 
-.animate-aura-reveal {
-  animation: aura-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.animate-zen-reveal {
+  animation: zen-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes splash-name {
+@keyframes shimmer {
   0% {
-    transform: tracking-tight;
-    opacity: 0;
-    filter: blur(20px);
-  }
-
-  50% {
-    opacity: 1;
-    filter: blur(0);
+    transform: translateX(-100%);
   }
 
   100% {
-    letter-spacing: 0.1em;
+    transform: translateX(100%);
   }
 }
 
-.animate-splash-name {
-  animation: splash-name 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.animate-shimmer {
+  animation: shimmer 2s infinite;
 }
