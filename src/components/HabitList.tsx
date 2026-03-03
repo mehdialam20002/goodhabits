@@ -271,9 +271,17 @@ export default function HabitList({ habits, completionStatus, currentDate, isSub
                             onChange={(e) => setNewTitle(e.target.value)}
                         />
                         <div className="flex gap-3">
-                            <Button type="submit" className="flex-1 rounded-2xl font-black text-sm uppercase tracking-widest bg-indigo-600 dark:bg-cyan-500 text-white border-none h-12 shadow-lg shadow-indigo-500/20 hover:scale-[1.02] active:scale-95 transition-all">
-                                Establish Habit
-                            </Button>
+                         <Button
+  type="submit"
+  className="flex-1 rounded-2xl font-black text-sm uppercase tracking-widest 
+  bg-indigo-600 hover:bg-indigo-700 
+  dark:bg-cyan-500 dark:hover:bg-cyan-600
+  text-white border-none h-12 
+  shadow-lg shadow-indigo-500/20 
+  hover:scale-[1.02] active:scale-95 transition-all"
+>
+  Establish Habit
+</Button>
                             <Button type="button" variant="ghost" onClick={() => setIsAdding(false)} className="rounded-2xl font-bold text-zinc-400 h-12 hover:bg-zinc-100 dark:hover:bg-zinc-900 px-6">
                                 Abort
                             </Button>
