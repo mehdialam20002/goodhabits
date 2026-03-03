@@ -15,12 +15,24 @@ export default async function DashboardLayout({
     }
 
     return (
-         <div className="flex h-screen bg-zinc-50 dark:bg-zinc-950 overflow-hidden">
-  <Sidebar user={session.user} />
+         <div className="flex min-h-screen bg-zinc-50 dark:bg-zinc-950">
+      <Sidebar user={session.user} />
 
-  <main className="flex-1 overflow-y-auto px-4 pt-24 pb-8 md:px-8 lg:px-12 xl:px-24 lg:pt-8">
-    {children}
-  </main>
-</div>
+      <main
+        className="
+      flex-1
+      overflow-y-auto
+      px-4
+      pt-20
+      pb-8
+      md:px-8
+      lg:px-12
+      xl:px-24
+      md:pt-8
+    "
+      >
+        {children}
+      </main>
+    </div>
     );
 }
