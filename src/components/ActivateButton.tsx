@@ -28,7 +28,7 @@ export default function ActivateButton() {
 
             const options = {
                 key: key,
-                amount: 100, // Amount in paise (₹180 = 18000)
+                amount: 18000, // Amount in paise (₹180 = 18000)
                 currency: "INR",
                 name: "Aura Habit Tracker",
                 description: "Lifetime Premium Access",
