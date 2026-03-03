@@ -118,7 +118,7 @@ export default async function AnalyticsPage({
                     <p className="text-4xl font-bold text-zinc-900 dark:text-zinc-50">{totalHabits}</p>
                     <p className="text-xs text-zinc-500 mt-2">Active routines</p>
                 </div>
-                <div className="p-6 rounded-3xl glass-effect border border-zinc-200 dark:border-zinc-800 soft-shadow bg-zinc-900 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-900">
+                <div className="p-6 rounded-3xl glass-effect border border-zinc-200 dark:border-zinc-800 soft-shadow bg-zinc-900 dark:bg-zinc-100  dark:text-zinc-900">
                     <h3 className="text-sm font-semibold text-zinc-400 dark:text-zinc-600 mb-1">Current Streak</h3>
                     <p className="text-4xl font-bold">{streakDays} Days</p>
                     <p className="text-xs mt-2 opacity-80">You're on fire! 🔥</p>
