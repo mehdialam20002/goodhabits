@@ -37,7 +37,12 @@ export default function AnalyticsCharts({ data }: { data: ChartData[] }) {
                     />
                     <Tooltip
                         contentStyle={{ borderRadius: "16px", border: "none", boxShadow: "0 4px 14px 0 rgba(0,0,0,0.1)" }}
-                        formatter={(value: any) => [`${value}% Completion`, "Score"]}
+                        formatter={(value: any, name: string | undefined, item: any) =>
+                            name === "completion"
+                                ? [`${value}% Completion`, "Score"]
+                                : [`${item?.payload?.count ?? value} habits completed`, "Count"]
+                        }
+                        labelFormatter={(label) => `Period: ${label}`}
                     />
                     <Line
                         type="monotone"
