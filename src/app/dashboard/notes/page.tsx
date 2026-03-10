@@ -11,6 +11,12 @@ export default async function NotesPage({
     const dateStr = typeof givenDateParams === 'string' ? givenDateParams : format(new Date(), "yyyy-MM-dd");
 
     const note = await getNoteByDate(dateStr);
+    const prompts = [
+        "What was the one habit that moved the day forward?",
+        "Which habit slipped today, and what blocked it?",
+        "What exact time will you do your hardest habit tomorrow?",
+        "What should be repeated because it worked well today?",
+    ];
 
     return (
         <div className="max-w-4xl mx-auto w-full animate-in fade-in zoom-in-95 duration-500">
@@ -19,7 +25,7 @@ export default async function NotesPage({
                 <p className="text-zinc-500">Document your thoughts, wins, and reflections.</p>
             </header>
 
-            <JournalEditor initialNote={note?.content || ""} currentDate={dateStr} />
+            <JournalEditor initialNote={note?.content || ""} currentDate={dateStr} prompts={prompts} />
         </div>
     );
 }

@@ -60,6 +60,19 @@ export async function deleteHabit(id: string) {
   revalidatePath("/dashboard");
 }
 
+export async function editHabit(id: string, title: string) {
+  const session: any = await getServerSession(authOptions);
+  if (!session?.user?.id) throw new Error("Unauthorized");
+
+  await prisma.habit.updateMany({
+    where: { id, userId: session.user.id },
+    data: { title },
+  });
+
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/analytics");
+}
+
 export async function getHabitLogs(date: string) {
   const session: any = await getServerSession(authOptions);
   if (!session?.user?.id) return [];
@@ -110,4 +123,3 @@ export async function toggleHabitLog(habitId: string, date: string, completed: b
 
   revalidatePath("/dashboard");
 }
-

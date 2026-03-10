@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { User, Shield, Bell, Palette, Globe } from "lucide-react";
+import SettingsWorkspace from "@/components/SettingsWorkspace";
 
 export default async function SettingsPage() {
     const session: any = await getServerSession(authOptions);
@@ -73,6 +74,8 @@ export default async function SettingsPage() {
                         </div>
                     </div>
                 ))}
+
+                <SettingsWorkspace />
 
                 <div className="p-10 rounded-[3rem] bg-indigo-500 text-white flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl shadow-indigo-100 dark:shadow-none stagger-3 animate-float overflow-hidden relative">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32" />

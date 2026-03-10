@@ -6,10 +6,13 @@ export async function getAIInsight(prompt: string) {
   }
 
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3200);
     const response = await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
       {
         method: "POST",
+        signal: controller.signal,
         headers: {
           Authorization: `Bearer ${apiKey}`,
           "HTTP-Referer": "http://localhost:3000", // Optional, for OpenRouter rankings
@@ -61,6 +64,7 @@ Action: <specific step 2 or "None">
         }),
       },
     );
+    clearTimeout(timeout);
 
     const data = await response.json();
     return (
