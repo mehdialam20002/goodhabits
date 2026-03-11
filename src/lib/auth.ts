@@ -1,6 +1,5 @@
 import prisma from "./db";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -43,26 +42,15 @@ export const authOptions = {
         session: async ({ session, token }: any) => {
             if (session?.user) {
                 const userId = token.sub || token.uid;
-                if (userId) {
-                    try {
-                        const user: any = await prisma.user.findUnique({
-                            where: { id: userId },
-                        });
-
-                        if (user) {
-                            session.user.id = user.id;
-                            session.user.isSubscribed = user.isSubscribed || false;
-                        }
-                    } catch (error) {
-                        console.error("Session callback error:", error);
-                    }
-                }
+                session.user.id = userId;
+                session.user.isSubscribed = Boolean(token.isSubscribed);
             }
             return session;
         },
         jwt: async ({ user, token }: any) => {
             if (user) {
                 token.uid = user.id;
+                token.isSubscribed = Boolean(user.isSubscribed);
             }
             return token;
         },

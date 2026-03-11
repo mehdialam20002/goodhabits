@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Habit } from "@prisma/client";
 import { addDays, format } from "date-fns";
-import { CalendarDays, Check, ChevronLeft, ChevronRight, Edit2, Eye, Flame, GripVertical, Layers3, Pin, Plus, Search, Settings2, Sparkles, Tag, Trash2, X } from "lucide-react";
+import { CalendarDays, Check, ChevronLeft, ChevronRight, Edit2, Flame, GripVertical, Layers3, Pin, Plus, Search, Settings2, Sparkles, Tag, Trash2, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useTransition } from "react";
@@ -35,7 +35,6 @@ export default function HabitList({ habits, completionStatus, currentDate, isSub
   const [currentDateState, setCurrentDateState] = useState(new Date(`${currentDate}T12:00:00`));
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"all" | "pending" | "done" | "priority">("all");
-  const [focusMode, setFocusMode] = useState(false);
   const [priorityIds, setPriorityIds] = useState<string[]>([]);
   const [habitOrder, setHabitOrder] = useState<string[]>([]);
   const [draggingHabitId, setDraggingHabitId] = useState<string | null>(null);
@@ -59,8 +58,6 @@ export default function HabitList({ habits, completionStatus, currentDate, isSub
     setHabitOrder(read("habit-order", []));
     setHabitMeta(read("habit-meta-map", {}));
     setDraftMeta(read("habit-draft-meta", defaultMeta));
-    const prefs = read<{ focusFirst?: boolean }>("aura-preferences", {});
-    setFocusMode(Boolean(prefs.focusFirst));
     const soundPreference = window.localStorage.getItem("aura-sound-enabled");
     if (soundPreference) setSoundEnabled(soundPreference === "true");
     setShowOnboarding(!window.localStorage.getItem("aura-onboarding-dismissed"));
@@ -100,8 +97,7 @@ export default function HabitList({ habits, completionStatus, currentDate, isSub
     const done = optimisticStatus[habit.id] || false;
     const priority = priorityIds.includes(habit.id);
     return habit.title.toLowerCase().includes(search.toLowerCase()) &&
-      (filter === "all" || (filter === "pending" && !done) || (filter === "done" && done) || (filter === "priority" && priority)) &&
-      (!focusMode || priority);
+      (filter === "all" || (filter === "pending" && !done) || (filter === "done" && done) || (filter === "priority" && priority));
   });
 
   const beginQuickAdd = (title = "") => {
@@ -193,10 +189,10 @@ export default function HabitList({ habits, completionStatus, currentDate, isSub
       </div>
     </div>
 
-    <div className="mb-8 flex items-center justify-between">
-      <div><h2 className="text-2xl font-bold tracking-tight">Daily Focus</h2><p className="text-xs font-medium text-zinc-500">Track your progress and stay consistent.</p></div>
-      <div className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-2 dark:border-zinc-800 dark:bg-zinc-900">
-        <span className="text-sm font-bold">{progress}%</span>
+    <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div><h2 className="text-2xl md:text-3xl font-black tracking-tight text-zinc-950 dark:text-zinc-50">Daily Focus</h2><p className="mt-1 text-sm md:text-base font-medium text-zinc-500">Track your progress and stay consistent.</p></div>
+      <div className="self-start rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900">
+        <span className="text-base font-black text-zinc-900 dark:text-zinc-100">{progress}% complete</span>
       </div>
     </div>
 
@@ -225,17 +221,18 @@ export default function HabitList({ habits, completionStatus, currentDate, isSub
       </div>
     </div>}
 
-    <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-[1.5fr_auto_auto]">
-      <div className="flex items-center gap-3 rounded-2xl border border-zinc-200 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-950"><Search className="h-4 w-4 text-zinc-400" /><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search habits..." className="w-full bg-transparent text-sm outline-none placeholder:text-zinc-400" /></div>
-      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-800 dark:bg-zinc-950">{["all", "pending", "done", "priority"].map((key) => <button key={key} type="button" onClick={() => setFilter(key as typeof filter)} className={`rounded-xl px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] ${filter === key ? "bg-indigo-600 text-white dark:bg-cyan-500" : "text-zinc-400"}`}>{key}</button>)}</div>
-      <button type="button" onClick={() => setFocusMode((prev) => !prev)} className={`flex items-center justify-center gap-2 rounded-2xl border px-4 py-3 text-xs font-black uppercase tracking-[0.2em] ${focusMode ? "border-indigo-500 bg-indigo-600 text-white dark:border-cyan-400 dark:bg-cyan-500" : "border-zinc-200 bg-white text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950"}`}><Eye className="h-4 w-4" />Focus Mode</button>
+    <div className="mb-6 grid grid-cols-1 gap-3 xl:grid-cols-[1.35fr_auto]">
+      <div className="flex items-center gap-3 rounded-[1.6rem] border border-zinc-200 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-950"><Search className="h-4 w-4 text-zinc-400" /><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search habits..." className="w-full bg-transparent text-sm md:text-base outline-none placeholder:text-zinc-400" /></div>
+      <div className="flex flex-wrap items-center gap-2 rounded-[1.6rem] border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-800 dark:bg-zinc-950">
+        {["all", "pending", "done", "priority"].map((key) => <button key={key} type="button" onClick={() => setFilter(key as typeof filter)} className={`rounded-xl px-3.5 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] transition ${filter === key ? "bg-indigo-600 text-white shadow-md dark:bg-cyan-500" : "text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-900"}`}>{key}</button>)}
+      </div>
     </div>
 
-    <div className="mb-6 flex flex-wrap items-center gap-3">
-      <div className="rounded-2xl bg-zinc-100 px-4 py-2 text-xs font-bold text-zinc-500 dark:bg-zinc-900">{completedCount} complete</div>
-      <div className="rounded-2xl bg-zinc-100 px-4 py-2 text-xs font-bold text-zinc-500 dark:bg-zinc-900">{Math.max(habits.length - completedCount, 0)} pending</div>
-      <div className="rounded-2xl bg-zinc-100 px-4 py-2 text-xs font-bold text-zinc-500 dark:bg-zinc-900">{priorityIds.length}/3 priorities pinned</div>
-      <div className="rounded-2xl bg-zinc-100 px-4 py-2 text-xs font-bold text-zinc-500 dark:bg-zinc-900">Drag to reorder</div>
+    <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
+      <div className="rounded-2xl bg-zinc-100 px-4 py-3 text-xs font-bold text-zinc-500 dark:bg-zinc-900">{completedCount} complete</div>
+      <div className="rounded-2xl bg-zinc-100 px-4 py-3 text-xs font-bold text-zinc-500 dark:bg-zinc-900">{Math.max(habits.length - completedCount, 0)} pending</div>
+      <div className="rounded-2xl bg-zinc-100 px-4 py-3 text-xs font-bold text-zinc-500 dark:bg-zinc-900">{priorityIds.length}/3 priorities pinned</div>
+      <div className="rounded-2xl bg-zinc-100 px-4 py-3 text-xs font-bold text-zinc-500 dark:bg-zinc-900">Drag to reorder</div>
     </div>
 
     {!isSubscribed && <div className="mb-8 rounded-2xl border border-zinc-800 bg-zinc-900 p-5 text-zinc-50 dark:border-zinc-200 dark:bg-zinc-100 dark:text-zinc-900">
@@ -250,25 +247,25 @@ export default function HabitList({ habits, completionStatus, currentDate, isSub
 
       {visibleHabits.map((habit) => {
         const done = optimisticStatus[habit.id] || false, priority = priorityIds.includes(habit.id), meta = habitMeta[habit.id] ?? defaultMeta;
-        return <div key={habit.id} className={`group rounded-2xl border ${done ? "border-indigo-100 bg-white shadow-sm dark:border-zinc-800/50 dark:bg-zinc-900/40" : "border-zinc-100 bg-white hover:shadow-xl dark:border-zinc-900 dark:bg-zinc-950"}`} onDragOver={(e) => { e.preventDefault(); moveHabit(habit.id); }} onDrop={() => setDraggingHabitId(null)} onDragEnd={() => setDraggingHabitId(null)}>
-          <div className="flex cursor-pointer items-center justify-between p-4 select-none" onClick={() => isSubscribed ? handleToggle(habit.id) : router.push("/dashboard/subscription")}>
-            <div className="flex flex-1 items-center gap-4">
+        return <div key={habit.id} className={`interactive-card group rounded-[1.8rem] border ${done ? "border-indigo-200 bg-white shadow-sm dark:border-zinc-800/50 dark:bg-zinc-900/40" : "border-zinc-200 bg-white hover:border-indigo-200 dark:border-zinc-900 dark:bg-zinc-950"}`} onDragOver={(e) => { e.preventDefault(); moveHabit(habit.id); }} onDrop={() => setDraggingHabitId(null)} onDragEnd={() => setDraggingHabitId(null)}>
+          <div className="flex cursor-pointer flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5 select-none" onClick={() => isSubscribed ? handleToggle(habit.id) : router.push("/dashboard/subscription")}>
+            <div className="flex flex-1 items-start gap-4 sm:items-center">
               <button type="button" draggable onDragStart={() => setDraggingHabitId(habit.id)} onClick={(e) => e.stopPropagation()} className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900"><GripVertical className="h-4 w-4" /></button>
-              <div className={`flex h-8 w-8 items-center justify-center rounded-xl border ${done ? "border-indigo-600 bg-indigo-600 text-white dark:border-cyan-500 dark:bg-cyan-500" : "border-zinc-200 dark:border-zinc-800"}`}>{done && <Check className="h-4 w-4 stroke-[4]" />}</div>
-              <div className="flex flex-col">
+              <div className={`flex h-10 w-10 items-center justify-center rounded-2xl border ${done ? "border-indigo-600 bg-indigo-600 text-white shadow-lg shadow-indigo-500/20 dark:border-cyan-500 dark:bg-cyan-500" : "border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900"}`}>{done && <Check className="h-4 w-4 stroke-[4]" />}</div>
+              <div className="min-w-0 flex flex-col gap-2">
                 <div className="flex flex-wrap items-center gap-2">
-                  {editingHabitId === habit.id ? <form onSubmit={(e) => { e.preventDefault(); handleEdit(habit.id); }}><input value={editingTitle} onChange={(e) => setEditingTitle(e.target.value)} className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm font-bold outline-none dark:border-zinc-800 dark:bg-zinc-950" autoFocus /></form> : <div className={`text-base font-bold tracking-tight ${done ? "text-zinc-400 line-through opacity-60" : "text-zinc-900 dark:text-zinc-100"}`}>{habit.title}</div>}
-                  {priority && <span className="rounded-full bg-amber-100 px-2 py-1 text-[9px] font-black uppercase tracking-[0.2em] text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">Priority</span>}
+                  {editingHabitId === habit.id ? <form onSubmit={(e) => { e.preventDefault(); handleEdit(habit.id); }}><input value={editingTitle} onChange={(e) => setEditingTitle(e.target.value)} className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-base font-black outline-none dark:border-zinc-800 dark:bg-zinc-950" autoFocus /></form> : <div className={`break-words text-xl md:text-2xl font-black leading-tight tracking-tight ${done ? "text-zinc-400 line-through opacity-65" : "text-zinc-950 dark:text-zinc-50"}`}>{habit.title}</div>}
+                  {priority && <span className="rounded-full bg-amber-100 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.2em] text-amber-700 ring-1 ring-amber-200 dark:bg-amber-500/10 dark:text-amber-300 dark:ring-amber-500/20">Priority</span>}
                   <span className={`rounded-full px-2 py-1 text-[9px] font-black uppercase tracking-[0.2em] ${categoryStyles[meta.category] ?? categoryStyles.General}`}>{meta.category}</span>
                 </div>
-                <div className="mt-2 flex flex-wrap items-center gap-2">
-                  <div className={`text-[10px] font-black uppercase tracking-[0.2em] ${done ? "text-indigo-500 dark:text-cyan-400" : "text-zinc-400 opacity-60"}`}>{done ? "synchronized" : "pending protocol"}</div>
-                  <div className="rounded-full bg-zinc-100 px-2 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-zinc-500 dark:bg-zinc-900">{meta.difficulty}</div>
-                  <div className="rounded-full bg-zinc-100 px-2 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-zinc-500 dark:bg-zinc-900">{meta.cadence}</div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className={`rounded-full px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.2em] ${done ? "bg-indigo-50 text-indigo-600 dark:bg-cyan-500/10 dark:text-cyan-300" : "bg-zinc-100 text-zinc-500 dark:bg-zinc-900"}`}>{done ? "completed" : "in progress"}</div>
+                  <div className="rounded-full bg-zinc-100 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-zinc-600 dark:bg-zinc-900 dark:text-zinc-300">{meta.difficulty}</div>
+                  <div className="rounded-full bg-zinc-100 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-zinc-600 dark:bg-zinc-900 dark:text-zinc-300">{meta.cadence}</div>
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-2 self-end sm:self-auto" onClick={(e) => e.stopPropagation()}>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild><Button variant="ghost" className="h-9 w-9 rounded-xl p-0 opacity-0 group-hover:opacity-100"><Edit2 className="h-4 w-4 text-zinc-400" /></Button></DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[200px] rounded-2xl p-2 shadow-2xl">
@@ -317,7 +314,7 @@ export default function HabitList({ habits, completionStatus, currentDate, isSub
         </div>
       </form> : ((isSubscribed && habits.length < 10) || !isSubscribed) ? <button onClick={() => beginQuickAdd()} className="relative flex h-16 w-full items-center justify-center gap-3 overflow-hidden rounded-2xl border-2 border-dashed border-indigo-100 text-zinc-400 dark:border-zinc-800/50"><Plus className="h-5 w-5" /><span className="text-[11px] font-black uppercase tracking-[0.3em]">{isSubscribed ? "Initialize New Protocol" : "Unlock Pro Capabilities"}</span></button> : null}
 
-      {visibleHabits.length === 0 && habits.length > 0 && <div className="rounded-2xl border border-dashed border-zinc-200 p-8 text-center dark:border-zinc-800"><Flame className="mx-auto mb-3 h-6 w-6 text-zinc-300 dark:text-zinc-700" /><p className="text-sm font-bold">No habits match this view.</p><p className="mt-2 text-xs text-zinc-500">Try clearing search, switching filter, or turning off focus mode.</p></div>}
+      {visibleHabits.length === 0 && habits.length > 0 && <div className="rounded-2xl border border-dashed border-zinc-200 p-8 text-center dark:border-zinc-800"><Flame className="mx-auto mb-3 h-6 w-6 text-zinc-300 dark:text-zinc-700" /><p className="text-sm font-bold">No habits match this view.</p><p className="mt-2 text-xs text-zinc-500">Try clearing search or switching the current filter.</p></div>}
     </div>
   </div>;
 }

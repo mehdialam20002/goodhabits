@@ -1,7 +1,25 @@
 "use client";
 
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { useEffect, useState } from "react";
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  PolarAngleAxis,
+  RadialBar,
+  RadialBarChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { useEffect, useMemo, useState } from "react";
 
 interface ChartData {
   name: string;
@@ -9,7 +27,15 @@ interface ChartData {
   count: number;
 }
 
+interface HabitBreakdown {
+  title: string;
+  rate: number;
+  completions: number;
+}
+
 type ChartType = "line" | "bar" | "area";
+
+const PIE_COLORS = ["#7c3aed", "#06b6d4", "#f59e0b", "#10b981", "#ec4899"];
 
 function SharedAxes() {
   return (
@@ -30,7 +56,15 @@ function SharedAxes() {
   );
 }
 
-export default function AnalyticsCharts({ data }: { data: ChartData[] }) {
+export default function AnalyticsCharts({
+  data,
+  habitBreakdown,
+  averageCompletion,
+}: {
+  data: ChartData[];
+  habitBreakdown: HabitBreakdown[];
+  averageCompletion: number;
+}) {
   const [chartType, setChartType] = useState<ChartType>("line");
 
   useEffect(() => {
@@ -42,8 +76,25 @@ export default function AnalyticsCharts({ data }: { data: ChartData[] }) {
     window.localStorage.setItem("aura-chart-type", chartType);
   }, [chartType]);
 
+  const pieData = useMemo(
+    () =>
+      habitBreakdown.slice(0, 5).map((habit) => ({
+        name: habit.title,
+        value: Math.max(habit.completions, 1),
+      })),
+    [habitBreakdown],
+  );
+
+  const radialData = [
+    {
+      name: "Average",
+      value: averageCompletion,
+      fill: "#7c3aed",
+    },
+  ];
+
   return (
-    <div className="mt-4">
+    <div className="mt-4 space-y-6">
       <div className="mb-4 flex flex-wrap gap-2">
         {(["line", "bar", "area"] as ChartType[]).map((type) => (
           <button
@@ -61,7 +112,7 @@ export default function AnalyticsCharts({ data }: { data: ChartData[] }) {
         ))}
       </div>
 
-      <div className="h-[280px] w-full md:h-[320px]">
+      <div className="h-[280px] w-full md:h-[340px]">
         <ResponsiveContainer width="100%" height="100%">
           {chartType === "bar" ? (
             <BarChart data={data}>
@@ -80,6 +131,48 @@ export default function AnalyticsCharts({ data }: { data: ChartData[] }) {
             </LineChart>
           )}
         </ResponsiveContainer>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+        <div className="rounded-[2rem] border border-zinc-200 bg-zinc-50/70 p-5 dark:border-zinc-800 dark:bg-zinc-900/50">
+          <div className="mb-4">
+            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-zinc-400">Habit share</p>
+            <h4 className="mt-2 text-lg font-black tracking-tight text-zinc-900 dark:text-zinc-100">Completion distribution</h4>
+          </div>
+          <div className="h-[240px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie data={pieData} dataKey="value" nameKey="name" innerRadius={52} outerRadius={84} paddingAngle={4}>
+                  {pieData.map((entry, index) => (
+                    <Cell key={entry.name} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="rounded-[2rem] border border-zinc-200 bg-zinc-50/70 p-5 dark:border-zinc-800 dark:bg-zinc-900/50">
+          <div className="mb-4">
+            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-zinc-400">Intensity</p>
+            <h4 className="mt-2 text-lg font-black tracking-tight text-zinc-900 dark:text-zinc-100">Average completion gauge</h4>
+          </div>
+          <div className="h-[240px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <RadialBarChart cx="50%" cy="50%" innerRadius="45%" outerRadius="80%" barSize={18} data={radialData} startAngle={180} endAngle={0}>
+                <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
+                <RadialBar background dataKey="value" cornerRadius={20} />
+                <text x="50%" y="48%" textAnchor="middle" dominantBaseline="middle" className="fill-zinc-900 dark:fill-zinc-100" style={{ fontSize: 34, fontWeight: 900 }}>
+                  {averageCompletion}%
+                </text>
+                <text x="50%" y="61%" textAnchor="middle" dominantBaseline="middle" className="fill-zinc-500 dark:fill-zinc-400" style={{ fontSize: 12, fontWeight: 700, letterSpacing: 2 }}>
+                  AVERAGE
+                </text>
+              </RadialBarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
     </div>
   );

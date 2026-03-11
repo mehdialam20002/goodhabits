@@ -11,6 +11,9 @@ import {
   LineChart,
   LogOut,
   Menu,
+  Orbit,
+  TimerReset,
+  Rocket,
   Settings,
   Sparkles,
   X,
@@ -32,11 +35,33 @@ export default function Sidebar({ user }: SidebarProps) {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const navSections = [
+    {
+      title: "Workspace",
+      links: [
+        { label: "Dashboard", href: "/dashboard", icon: Home },
+        { label: "Analytics", href: "/dashboard/analytics", icon: LineChart },
+        { label: "Notes", href: "/dashboard/notes", icon: BookOpen },
+        { label: "Rituals", href: "/dashboard/rituals", icon: Orbit },
+        { label: "Timer", href: "/dashboard/timer", icon: TimerReset },
+      ],
+    },
+    {
+      title: "Manage",
+      links: [
+        { label: "Settings", href: "/dashboard/settings", icon: Settings },
+        { label: user.isSubscribed ? "Aura Pro" : "Upgrade", href: "/dashboard/subscription", icon: Rocket },
+      ],
+    },
+  ];
   const navLinks = [
     { label: "Dashboard", href: "/dashboard", icon: Home },
     { label: "Analytics", href: "/dashboard/analytics", icon: LineChart },
     { label: "Notes", href: "/dashboard/notes", icon: BookOpen },
+    { label: "Rituals", href: "/dashboard/rituals", icon: Orbit },
+    { label: "Timer", href: "/dashboard/timer", icon: TimerReset },
     { label: "Settings", href: "/dashboard/settings", icon: Settings },
+    { label: user.isSubscribed ? "Aura Pro" : "Upgrade", href: "/dashboard/subscription", icon: Rocket },
   ];
 
   useEffect(() => {
@@ -137,28 +162,44 @@ export default function Sidebar({ user }: SidebarProps) {
             </p>
           </div>
 
-          <nav className="space-y-3 px-6">
-            {navLinks.map((link) => {
-              const Icon = link.icon;
-              const isActive = pathname === link.href;
+          <div className="space-y-6 px-6">
+            {navSections.map((section) => (
+              <div key={section.title}>
+                <p className="px-4 pb-3 text-[10px] font-black uppercase tracking-[0.28em] text-zinc-400">
+                  {section.title}
+                </p>
+                <nav className="space-y-3">
+                  {section.links.map((link) => {
+                    const Icon = link.icon;
+                    const isActive = pathname === link.href;
 
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  prefetch
-                  className={`flex items-center gap-4 px-5 py-4 rounded-2xl transition ${
-                    isActive
-                      ? "bg-indigo-600 dark:bg-cyan-500 text-white shadow-lg"
-                      : "text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-indigo-600 dark:hover:text-cyan-400"
-                  }`}
-                >
-                  <Icon size={18} />
-                  <span className="font-bold text-sm">{link.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        prefetch
+                        className={`flex items-center justify-between gap-4 rounded-2xl px-5 py-4 transition ${
+                          isActive
+                            ? "bg-indigo-600 text-white shadow-lg dark:bg-cyan-500"
+                            : "text-zinc-500 hover:bg-zinc-50 hover:text-indigo-600 dark:hover:bg-zinc-900 dark:hover:text-cyan-400"
+                        }`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <Icon size={18} />
+                          <span className="font-bold text-sm">{link.label}</span>
+                        </div>
+                        {link.href === "/dashboard/subscription" && !user.isSubscribed && (
+                          <span className="rounded-full bg-white/20 px-2 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-current">
+                            Pro
+                          </span>
+                        )}
+                      </Link>
+                    );
+                  })}
+                </nav>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="px-6">

@@ -42,7 +42,7 @@ export default async function SubscriptionPage() {
     "Priority routine coaching",
     "Exportable review reports",
     "Achievement tracking",
-    "Focus mode and priority workflows",
+    "Priority workflow tools",
     "Lifetime access, one-time payment",
   ];
 
@@ -59,7 +59,7 @@ export default async function SubscriptionPage() {
     ["Habit cap", "Up to 10", "Unlimited"],
     ["Analytics", "Basic", "Full range + export"],
     ["AI review", "Limited", "Sharper insights"],
-    ["Focus workflows", "Basic", "Priority + focus mode"],
+    ["Workflow tools", "Basic", "Priority system + routines"],
     ["Reports", "No", "PNG, CSV, print, JSON"],
   ];
   const faqs = [
@@ -123,7 +123,7 @@ export default async function SubscriptionPage() {
                 Turn this habit tracker into a real performance system.
               </h1>
               <p className="mt-6 text-base md:text-lg text-zinc-500 leading-relaxed max-w-2xl">
-                Upgrade once and unlock the complete Aura workflow: better tracking, sharper analytics, smarter AI, stronger reviews, and a cleaner daily operating experience.
+                Upgrade once and unlock the complete Aura workflow: better tracking, sharper analytics, smarter AI,  reviews, and a cleaner daily operating experience.
               </p>
             </div>
 

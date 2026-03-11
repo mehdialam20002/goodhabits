@@ -17,7 +17,6 @@ type Preferences = {
   accountabilityName: string;
   accountabilityContact: string;
   dailyReview: boolean;
-  focusFirst: boolean;
 };
 
 const defaultPrefs: Preferences = {
@@ -30,7 +29,6 @@ const defaultPrefs: Preferences = {
   accountabilityName: "",
   accountabilityContact: "",
   dailyReview: true,
-  focusFirst: true,
 };
 
 export default function SettingsWorkspace() {
@@ -152,10 +150,6 @@ export default function SettingsWorkspace() {
           <label className="flex items-center gap-3 rounded-2xl border border-zinc-200 dark:border-zinc-800 px-4 py-3">
             <Checkbox checked={prefs.dailyReview} onCheckedChange={(checked) => update("dailyReview", Boolean(checked))} />
             <span className="text-sm font-medium">Show daily review prompts automatically</span>
-          </label>
-          <label className="flex items-center gap-3 rounded-2xl border border-zinc-200 dark:border-zinc-800 px-4 py-3">
-            <Checkbox checked={prefs.focusFirst} onCheckedChange={(checked) => update("focusFirst", Boolean(checked))} />
-            <span className="text-sm font-medium">Start each day in focus mode</span>
           </label>
         </div>
       </div>

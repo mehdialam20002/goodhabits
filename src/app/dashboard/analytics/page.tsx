@@ -161,7 +161,7 @@ export default async function AnalyticsPage({
   const summaryText = `Range ${range.label}: ${averageCompletion}% average completion. Best habit: ${monthlyReview.strongest}. Needs attention: ${monthlyReview.weakest}. Current streak: ${streakDays} days.`;
 
   return (
-    <div className="max-w-5xl mx-auto w-full px-1 sm:px-0 animate-aura-reveal opacity-0" style={{ animationFillMode: "forwards" }}>
+    <div className="max-w-6xl mx-auto w-full px-1 sm:px-0 animate-aura-reveal opacity-0" style={{ animationFillMode: "forwards" }}>
       <header className="mb-10 flex flex-col gap-6 stagger-1">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
@@ -259,7 +259,15 @@ export default async function AnalyticsPage({
             {range.step === "day" ? "Daily view" : range.step === "week" ? "Weekly view" : "Monthly view"}
           </p>
         </div>
-        <AnalyticsCharts data={chartData} />
+        <AnalyticsCharts
+          data={chartData}
+          habitBreakdown={leaderboard.slice(0, 5).map((habit) => ({
+            title: habit.title,
+            rate: habit.rate,
+            completions: habit.completions,
+          }))}
+          averageCompletion={averageCompletion}
+        />
       </div>
 
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
